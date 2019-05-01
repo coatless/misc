@@ -67,6 +67,10 @@ imps_wordcloud_export_loc =
 
 # Write to a PDF file
 pdf(imps_wordcloud_export_loc, 8, 11)
+layout(matrix(c(1, 2), nrow=2), heights=c(1, 4))
+par(mar=rep(0, 4))
+plot.new()
+text(x=0.5, y=0.5, "2018 International Meeting of the Psychometric Society\nColumbia University\nNew York, USA\nJuly 9-13, 2018")
 wordcloud(
     words = most_popular_words$word,
     freq = most_popular_words$freq,
