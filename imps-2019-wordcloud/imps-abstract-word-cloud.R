@@ -80,4 +80,19 @@ wordcloud(
     rot.per = 0.35,
     colors = brewer.pal(8, "Dark2")
 )
+
+
+pdf(imps_wordcloud_export_loc, 8, 11)
+layout(matrix(c(1, 2), nrow=2), heights=c(1, 4))
+par(mar=rep(0, 4))
+plot.new()
+text(x=0.5, y=0.5, "2018 International Meeting of the Psychometric Society\nColumbia University\nNew York, USA\nJuly 9-13, 2018")
+wordcloud2(most_popular_words[most_popular_words$freq>20,],
+           size=1.6,
+           backgroundColor = "black",
+           color = "random-light",
+           gridSize = 1,
+           rotateRatio = 0.8,
+           shape = "diamond")
+
 dev.off()
