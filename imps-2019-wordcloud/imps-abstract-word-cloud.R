@@ -1,7 +1,7 @@
 ## Install Script Dependencies ----
 
 # All packages needed for script
-pkg_list = c("pdftools", "tm", "wordcloud")
+pkg_list = c("pdftools", "tm", "wordcloud","wordcloud2", "webshot", "htmlwidgets")
 # Determine what packages are NOT installed already.
 to_install_pkgs = pkg_list[!(pkg_list %in% installed.packages()[,"Package"])]
 # Install the missing packages
@@ -80,4 +80,37 @@ wordcloud(
     rot.per = 0.35,
     colors = brewer.pal(8, "Dark2")
 )
-dev.off()
+
+
+# Attempt with wordcloud using HTML
+
+imps_wordcloud_export_loc =
+    paste0(tools::file_path_sans_ext(imps_abstract_pdf_file),
+           "-wordcloud-big.pdf")
+
+# Install phantomjs
+webshot::install_phantomjs()
+# Construct the graph
+my_graph = wordcloud2(
+    most_popular_words[most_popular_words$freq > 20, ],
+    size = 1.6,
+    backgroundColor = "black",
+    color = "random-light",
+    gridSize = 1,
+    rotateRatio = 0.8,
+    shape = "diamond"
+)
+
+# Save the graph as HTML
+htmlwidgets::saveWidget(my_graph, "tmp.html", selfcontained = F)
+# Save to a PDF
+webshot::webshot(
+    "tmp.html",
+    imps_wordcloud_export_loc,
+    delay = 5,
+    vwidth = 480,
+    vheight = 480
+)
+
+file.remove("tmp.html")
+
