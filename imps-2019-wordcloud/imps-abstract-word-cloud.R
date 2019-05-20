@@ -15,21 +15,29 @@ pkg_loaded = sapply(pkg_list, require, character.only = TRUE)
 ## Project Directory ----
 proj_dir = file.path("imps-2019-wordcloud")
 
+## Set data file location ----
+
+imps_abstract_csv_file = file.path(proj_dir, "all-imps-2019-abstracts.csv")
+imps_wordcloud_name = "imps-2019-wordcloud"
+
+
 ## Download the IMPS 2018 Abstract Text ----
 
-# Set target URL
-imps_url = "https://www.psychometricsociety.org/sites/default/files/IMPS%202018%20Talk%20Abstracts.pdf"
-imps_abstract_pdf_file = file.path(
-    proj_dir, tolower(gsub(" ", "-", URLdecode(basename(imps_url))))
-)
-
-# Download the PDF
-download.file(imps_url, imps_abstract_pdf_file, mode = "wb")
+# # Set target URL
+# imps_url = "https://www.psychometricsociety.org/sites/default/files/IMPS%202018%20Talk%20Abstracts.pdf"
+# imps_abstract_pdf_file = file.path(
+#     proj_dir, tolower(gsub(" ", "-", URLdecode(basename(imps_url))))
+# )
+#
+# # Download the PDF
+# download.file(imps_url, imps_abstract_pdf_file, mode = "wb")
 
 ## Construct Text Corpus ----
 
 # Parse the PDF text into an R text vector
-txt = pdf_text(imps_abstract_pdf_file)
+## txt = pdf_text(imps_abstract_pdf_file)
+
+txt = read.csv(imps_abstract_csv_file)[[1]]
 
 # Convert to a tm corpus
 abstract_corpus = VCorpus(VectorSource(txt))
@@ -62,8 +70,10 @@ head(most_popular_words, 10)
 set.seed(55531)
 
 imps_wordcloud_export_loc =
-    paste0(tools::file_path_sans_ext(imps_abstract_pdf_file),
-           "-wordcloud.pdf")
+    file.path(
+        proj_dir,
+        paste0(imps_wordcloud_name, "-small.pdf")
+    )
 
 # Write to a PDF file
 pdf(imps_wordcloud_export_loc, 8, 11)
@@ -87,11 +97,15 @@ wordcloud(
 # Attempt wordcloud using HTML
 
 imps_wordcloud_export_loc =
-    paste0(tools::file_path_sans_ext(imps_abstract_pdf_file),
-           "-wordcloud-big.pdf")
+    file.path(
+        proj_dir,
+        paste0(imps_wordcloud_name, "-big.pdf")
+    )
 
-# Install phantomjs
-webshot::install_phantomjs()
+# Check if phantomjs is installed, if not then install it.
+if(is.null(webshot:::find_phantom()) ) {
+    webshot::install_phantomjs()
+}
 
 # Construct the graph
 my_graph = wordcloud2(
