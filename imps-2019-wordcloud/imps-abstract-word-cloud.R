@@ -82,7 +82,9 @@ wordcloud(
 )
 
 
-# Attempt with wordcloud using HTML
+## Generate WordCloud in HTML and Translate to PDF ----
+
+# Attempt wordcloud using HTML
 
 imps_wordcloud_export_loc =
     paste0(tools::file_path_sans_ext(imps_abstract_pdf_file),
@@ -90,6 +92,7 @@ imps_wordcloud_export_loc =
 
 # Install phantomjs
 webshot::install_phantomjs()
+
 # Construct the graph
 my_graph = wordcloud2(
     most_popular_words[most_popular_words$freq > 20, ],
@@ -103,6 +106,7 @@ my_graph = wordcloud2(
 
 # Save the graph as HTML
 htmlwidgets::saveWidget(my_graph, "tmp.html", selfcontained = F)
+
 # Save to a PDF
 webshot::webshot(
     "tmp.html",
@@ -112,5 +116,6 @@ webshot::webshot(
     vheight = 480
 )
 
+# Delete artifacts
 file.remove("tmp.html")
-
+unlink("tmp_files", recursive = TRUE)
