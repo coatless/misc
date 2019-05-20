@@ -80,7 +80,7 @@ pdf(imps_wordcloud_export_loc, 8, 11)
 layout(matrix(c(1, 2), nrow=2), heights=c(1, 4))
 par(mar=rep(0, 4))
 plot.new()
-text(x=0.5, y=0.5, "2018 International Meeting of the Psychometric Society\nColumbia University\nNew York, USA\nJuly 9-13, 2018")
+text(x=0.5, y=0.5, "2019 International Meeting of the Psychometric Society\nCentro de Extensión at the Pontificia Universidad Católica de Chile\nSantiago, Chile\nJuly 15-19, 2019")
 wordcloud(
     words = most_popular_words$word,
     freq = most_popular_words$freq,
@@ -90,6 +90,7 @@ wordcloud(
     rot.per = 0.35,
     colors = brewer.pal(8, "Dark2")
 )
+dev.off()
 
 
 ## Generate WordCloud in HTML and Translate to PDF ----
